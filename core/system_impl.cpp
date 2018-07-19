@@ -531,12 +531,7 @@ bool SystemImpl::set_param_float(const std::string &name, float value)
     MAVLinkParameters::ParamValue param_value;
     param_value.set_float(value);
 
-    auto prom = std::make_shared<std::promise<bool>>();
-    auto res = prom->get_future();
-
-    _params.set_param_async(name, param_value, [&prom](bool success) { prom->set_value(success); });
-
-    return res.get();
+    return _params.set_param(name, param_value, false);
 }
 
 bool SystemImpl::set_param_int(const std::string &name, int32_t value)
@@ -544,12 +539,7 @@ bool SystemImpl::set_param_int(const std::string &name, int32_t value)
     MAVLinkParameters::ParamValue param_value;
     param_value.set_int32(value);
 
-    auto prom = std::make_shared<std::promise<bool>>();
-    auto res = prom->get_future();
-
-    _params.set_param_async(name, param_value, [&prom](bool success) { prom->set_value(success); });
-
-    return res.get();
+    return _params.set_param(name, param_value, false);
 }
 
 bool SystemImpl::set_param_ext_float(const std::string &name, float value)
@@ -557,12 +547,7 @@ bool SystemImpl::set_param_ext_float(const std::string &name, float value)
     MAVLinkParameters::ParamValue param_value;
     param_value.set_float(value);
 
-    auto prom = std::make_shared<std::promise<bool>>();
-    auto res = prom->get_future();
-
-    _params.set_param_async(name, param_value, [&prom](bool success) { prom->set_value(success); });
-
-    return res.get();
+    return _params.set_param(name, param_value, true);
 }
 
 bool SystemImpl::set_param_ext_int(const std::string &name, int32_t value)
@@ -570,12 +555,7 @@ bool SystemImpl::set_param_ext_int(const std::string &name, int32_t value)
     MAVLinkParameters::ParamValue param_value;
     param_value.set_int32(value);
 
-    auto prom = std::make_shared<std::promise<bool>>();
-    auto res = prom->get_future();
-
-    _params.set_param_async(name, param_value, [&prom](bool success) { prom->set_value(success); });
-
-    return res.get();
+    return _params.set_param(name, param_value, true);
 }
 
 void SystemImpl::set_param_float_async(const std::string &name, float value, success_t callback)
@@ -703,6 +683,13 @@ void SystemImpl::set_param_async(const std::string &name,
                                  bool extended)
 {
     _params.set_param_async(name, value, callback, extended);
+}
+
+bool SystemImpl::set_param(const std::string &name,
+                           MAVLinkParameters::ParamValue value,
+                           bool extended)
+{
+    return _params.set_param(name, value, extended);
 }
 
 void SystemImpl::get_param_async(const std::string &name,
