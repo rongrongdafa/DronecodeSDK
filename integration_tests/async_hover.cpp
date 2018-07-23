@@ -60,7 +60,6 @@ TEST_F(SitlTest, ActionAsyncHover)
 
 void receive_result(ActionResult result)
 {
-    LogDebug() << "got result: " << unsigned(result);
     EXPECT_EQ(result, ActionResult::SUCCESS);
 }
 
